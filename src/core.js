@@ -8,9 +8,11 @@
  */
  
 (function () {
-    var $D = Date, 
-        $P = $D.prototype, 
+    var $D = {} //  At the end I decide if Date or defineProperty //Date
+        $P = {}, // At the end I decide if prototype or defineProperty //$D.prototype, 
+        // Sorry, setting Spanish es-CO
         $C = $D.CultureInfo,
+        $pI = 'defineProperty' in Object;
         p = function (s, l) {
             if (!l) {
                 l = 2;
@@ -522,7 +524,7 @@
             this.addYears(config.year - this.getFullYear()); 
         }
         
-	    /* day has to go last because you can't validate the day without first knowing the month */
+        /* day has to go last because you can't validate the day without first knowing the month */
         if ($D.validateDay(config.day, this.getFullYear(), this.getMonth())) {
             this.addDays(config.day - this.getDate()); 
         }
@@ -862,4 +864,34 @@
         }
         ) : this._toString();
     };
+
+    // Fix, hope this works!
+    for(var property in $P){
+        if( $P.hasOwnProperty(property) ){
+            if( $pI ){
+                Object.defineProperty( Date.prototype, property, {
+                    value: $P[property],
+                    configurable: true,
+                    enumerable: false,
+                    writeable: true
+                } )
+            }else{
+                Date.prototype[property] = $P[property]
+            }
+        }
+    }
+    for(property in $D){
+        if( $D.hasOwnProperty(property) ){
+            if( $pI ){
+                Object.defineProperty( Date, property, {
+                    value: $D[property],
+                    configurable: true,
+                    enumerable: false,
+                    writeable: true
+                } )
+            }else{
+                Date[property] = $D[property]
+            }
+        }
+    }
 }());    
