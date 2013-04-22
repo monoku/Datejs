@@ -11,7 +11,7 @@
     var $D = {} //  At the end I decide if Date or defineProperty //Date
         $P = {}, // At the end I decide if prototype or defineProperty //$D.prototype, 
         // Sorry, setting Spanish es-CO
-        $C = $D.CultureInfo,
+        $C = Date.CultureInfo,
         $pI = 'defineProperty' in Object;
         p = function (s, l) {
             if (!l) {
